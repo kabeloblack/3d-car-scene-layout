@@ -1,0 +1,62 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "7r85_V_nskVePINlskuUa"
+uri = "file://artifacts/nocturne-motors/public/bg-road.png"
+type = "image"
+title = "Wet endless midnight road"
+
+[[generated]]
+id = "XWvN9TZPXZfrlVSyzUDoF"
+uri = "file://artifacts/nocturne-motors/public/bg-skyline.png"
+type = "image"
+title = "Night city skyline skyline"
+
+[[generated]]
+id = "_W1ZfdMF7xNM8s6cwwT63"
+uri = "file://artifacts/nocturne-motors/public/bg-fog.png"
+type = "image"
+title = "Fog and haze texture"
+
+[[generated]]
+id = "PQZ-GKexCDak2oLoMZsE9"
+uri = "file://artifacts/nocturne-motors/public/hero-car.png"
+type = "image"
+title = "Luxury hypercar side view"
+
+[[generated]]
+id = "PNMXrIdOTGVLxCsKMUSov"
+uri = "file://artifacts/nocturne-motors/public/car-1.png"
+type = "image"
+title = "Black superbike side view"
+
+[[generated]]
+id = "rZU7Hi6vykVkEklhpjYws"
+uri = "file://artifacts/nocturne-motors/public/car-2.png"
+type = "image"
+title = "Classic GT luxury car"
+
+[[generated]]
+id = "pnj2P3VL3MFrTkjmjHtoK"
+uri = "file://artifacts/nocturne-motors/public/car-3.png"
+type = "image"
+title = "Track focused hypercar"
+
+[[generated]]
+id = "jJsey-8BRU2-SZaKRJbDL"
+uri = "file://artifacts/nocturne-motors/public/car-4.png"
+type = "image"
+title = "Futuristic luxury motorcycle"
+
+[[generated]]
+id = "-2EQvbOBagPMB3WozkwN5"
+uri = "file://artifacts/nocturne-motors/public/car-5.png"
+type = "image"
+title = "Sleek supercar"
+
+[[generated]]
+id = "-hPsz7KHJh4L8t7p3plXR"
+uri = "file://artifacts/nocturne-motors/public/showroom.png"
+type = "image"
+title = "Private showroom interior"

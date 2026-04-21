@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Nocturne Motors"
+version = "1.0.0"
+id = "artifacts/nocturne-motors"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22802
+
+[services.development]
+run = "pnpm --filter @workspace/nocturne-motors run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/nocturne-motors", "run", "build" ]
+publicDir = "artifacts/nocturne-motors/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22802"
+BASE_PATH = "/"
