@@ -6,6 +6,7 @@ import { ToneMappingMode } from 'postprocessing';
 import { OrbitControls, Html } from '@react-three/drei';
 import { Environment } from './Environment';
 import { CarModel } from './CarModel';
+import { MercedesModel } from './MercedesModel';
 
 function Loader() {
   return (
@@ -71,7 +72,7 @@ export function Scene3D() {
   ], []);
 
   return (
-    <div className="relative w-full h-full bg-[#050404]">
+    <div className="relative w-full h-full" style={{ background: '#454545' }}>
       {/* Canvas */}
       <Canvas 
         shadows
@@ -79,7 +80,7 @@ export function Scene3D() {
         gl={{
           antialias: true,
           toneMapping: THREE.ACESFilmicToneMapping,
-          toneMappingExposure: 0.55
+          toneMappingExposure: 0.75
         }}
         frameloop="always"
         camera={{ position: [2, 1.4, 12], fov: 40 }} // Cinematic low angle
@@ -102,24 +103,37 @@ export function Scene3D() {
           />
           <Environment />
           
-          {cars.map((c) => (
-            <CarModel
-              key={c.id}
-              color={c.color}
-              position={c.position as [number, number, number]}
-              rotation={c.rotation as [number, number, number]}
-              name={c.name}
-              specs={c.specs}
-            />
-          ))}
+          {cars.map((c) =>
+            c.id === 'c1' ? (
+              <MercedesModel
+                key={c.id}
+                position={c.position as [number, number, number]}
+                rotation={c.rotation as [number, number, number]}
+                name="Mercedes-AMG GT4"
+                specs={{ hp: 510, speed: 185, engine: 'AMG 4.0L V8' }}
+              />
+            ) : (
+              <CarModel
+                key={c.id}
+                color={c.color}
+                position={c.position as [number, number, number]}
+                rotation={c.rotation as [number, number, number]}
+                name={c.name}
+                specs={c.specs}
+              />
+            )
+          )}
 
           <EffectComposer disableNormalPass multisampling={4}>
-            {/* Only true specular highlights bloom — threshold at 1.0 keeps car body clean */}
-            <Bloom intensity={0.10} luminanceThreshold={1.1} luminanceSmoothing={0.15} mipmapBlur radius={0.45} />
-            <BrightnessContrast brightness={-0.04} contrast={0.12} />
-            <HueSaturation hue={0} saturation={-0.10} />
+            {/* Subtle specular bloom only */}
+            <Bloom intensity={0.08} luminanceThreshold={1.2} luminanceSmoothing={0.1} mipmapBlur radius={0.4} />
+            {/* Slight brightness lift + soft contrast to match clean studio look */}
+            <BrightnessContrast brightness={0.04} contrast={0.08} />
+            {/* Near-neutral desaturation — keeps paint vivid but grounds against grey floor */}
+            <HueSaturation hue={0} saturation={-0.05} />
             <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
-            <Vignette offset={0.25} darkness={0.75} eskil={false} />
+            {/* Very light vignette — just enough edge depth */}
+            <Vignette offset={0.35} darkness={0.35} eskil={false} />
           </EffectComposer>
         </Suspense>
       </Canvas>

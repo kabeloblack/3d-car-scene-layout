@@ -35,11 +35,11 @@ export function CarModel({
     // Real car paint: low metalness (diffuse base), shine comes from clearcoat layer only
     const bodyMaterial = new THREE.MeshPhysicalMaterial({
       color: new THREE.Color(color),
-      metalness: 0.10,
-      roughness: 0.38,
+      metalness: 0.08,
+      roughness: 0.42,
       clearcoat: 1.0,
-      clearcoatRoughness: 0.12,
-      envMapIntensity: 1.0,
+      clearcoatRoughness: 0.08,
+      envMapIntensity: 1.2,
     });
 
     const glassMaterial = new THREE.MeshPhysicalMaterial({
@@ -49,7 +49,7 @@ export function CarModel({
       transmission: 0.9,
       ior: 1.5,
       thickness: 0.5,
-      envMapIntensity: 1.0,
+      envMapIntensity: 1.5,
       transparent: true,
     });
 
@@ -57,12 +57,14 @@ export function CarModel({
       color: '#111',
       roughness: 0.95,
       metalness: 0.1,
+      envMapIntensity: 1.5,
     });
 
     const rimMaterial = new THREE.MeshStandardMaterial({
       color: '#aaaaaa',
       roughness: 0.1,
       metalness: 0.9,
+      envMapIntensity: 1.5,
     });
 
     clone.traverse((child) => {
@@ -78,11 +80,15 @@ export function CarModel({
             mesh.material = bodyMaterial;
           } else if (matName.includes('glass') || matName.includes('window') || matName.includes('windshield')) {
             mesh.material = glassMaterial;
-            mesh.castShadow = false; // Glass shadows can look weird
+            mesh.castShadow = false;
           } else if (matName.includes('tire') || matName.includes('rubber')) {
             mesh.material = tireMaterial;
           } else if (matName.includes('rim') || matName.includes('alloy') || matName.includes('metal')) {
             mesh.material = rimMaterial;
+          } else {
+            // Apply envMapIntensity to any other mesh material
+            const mat = mesh.material as THREE.MeshStandardMaterial;
+            if (mat.envMapIntensity !== undefined) mat.envMapIntensity = 1.5;
           }
         }
       }
