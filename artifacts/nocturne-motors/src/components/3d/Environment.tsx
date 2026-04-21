@@ -14,31 +14,31 @@ export function Environment() {
   return (
     <>
       <color attach="background" args={['#050404']} />
-      <fog attach="fog" args={['#050404', 15, 120]} />
+      {/* Tighter, denser fog for volumetric depth */}
+      <fog attach="fog" args={['#050404', 8, 70]} />
 
-      {/* HDRI Environment for realistic lighting and reflections.
-          Loaded from Poly Haven (free CC0 HDRI CDN). */}
+      {/* HDRI Environment for reflections only — kept low so it doesn't over-light */}
       <DreiEnvironment
         files="https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/studio_small_03_1k.hdr"
-        environmentIntensity={1.4}
+        environmentIntensity={0.45}
         background={false}
       />
 
-      {/* Key Light: Warm, strong, casting soft shadows */}
-      <directionalLight 
-        position={[10, 15, 10]} 
-        intensity={2.5} 
-        color="#ffecd6" 
+      {/* Key Light — warm, controlled, the only strong source */}
+      <directionalLight
+        position={[8, 12, 6]}
+        intensity={1.1}
+        color="#ffe2b8"
         castShadow
         shadow-mapSize={[1024, 1024]}
         shadow-bias={-0.0001}
       />
 
-      {/* Fill Light: Cool, subtle */}
-      <directionalLight position={[-10, 10, 10]} intensity={0.5} color="#b3c6ff" />
+      {/* Fill Light — cool, very subtle, just lifts the shadow side */}
+      <directionalLight position={[-8, 6, 4]} intensity={0.18} color="#9ab4ff" />
 
-      {/* Rim Light: Behind the cars to separate from background */}
-      <directionalLight position={[0, 5, -50]} intensity={3} color="#ffffff" />
+      {/* Rim / Kicker — narrow back light for silhouette separation */}
+      <directionalLight position={[-2, 3, -15]} intensity={0.6} color="#cfd8ff" />
 
       {/* High Quality Contact Shadows */}
       <AccumulativeShadows 

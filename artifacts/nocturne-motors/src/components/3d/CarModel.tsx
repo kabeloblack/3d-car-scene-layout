@@ -34,11 +34,11 @@ export function CarModel({
     // Premium Materials
     const bodyMaterial = new THREE.MeshPhysicalMaterial({
       color: new THREE.Color(color),
-      metalness: 0.9,
-      roughness: 0.25,
+      metalness: 0.85,
+      roughness: 0.32,
       clearcoat: 1.0,
-      clearcoatRoughness: 0.1,
-      envMapIntensity: 1.5,
+      clearcoatRoughness: 0.18,
+      envMapIntensity: 0.7,
     });
 
     const glassMaterial = new THREE.MeshPhysicalMaterial({
@@ -110,14 +110,14 @@ export function CarModel({
           Adjusting rotation to face forward (along Z). */}
       <primitive object={clonedScene} rotation={[0, Math.PI, 0]} />
 
-      {/* Headlight pool — subtle emissive glow when hovered */}
+      {/* Headlight pool — restrained, only on hover */}
       {hovered && (
         <spotLight
-          color="#ffffff"
-          intensity={15}
-          angle={0.4}
-          penumbra={0.8}
-          distance={20}
+          color="#fff5e0"
+          intensity={3}
+          angle={0.35}
+          penumbra={0.9}
+          distance={14}
           decay={2}
           position={[0, 0.6, 2.1]}
           target-position={[0, 0, 8]}

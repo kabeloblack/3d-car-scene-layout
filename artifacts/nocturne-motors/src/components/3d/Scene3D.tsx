@@ -76,10 +76,10 @@ export function Scene3D() {
       <Canvas 
         shadows
         dpr={[1, 1.75]}
-        gl={{ 
-          antialias: true, 
+        gl={{
+          antialias: true,
           toneMapping: THREE.ACESFilmicToneMapping,
-          toneMappingExposure: 1.05
+          toneMappingExposure: 0.65
         }}
         frameloop="always"
         camera={{ position: [2, 1.4, 12], fov: 40 }} // Cinematic low angle
@@ -114,13 +114,13 @@ export function Scene3D() {
           ))}
 
           <EffectComposer disableNormalPass multisampling={4}>
-            {/* Cinematic Post-Processing Stack — sharp cars, moody grade */}
-            <Bloom intensity={0.6} luminanceThreshold={0.82} mipmapBlur={true} radius={0.75} />
-            <BrightnessContrast brightness={-0.02} contrast={0.18} />
-            <HueSaturation hue={0} saturation={-0.08} />
+            {/* Restrained cinematic grade — only true highlights bloom */}
+            <Bloom intensity={0.18} luminanceThreshold={1.0} luminanceSmoothing={0.2} mipmapBlur radius={0.55} />
+            <BrightnessContrast brightness={-0.06} contrast={0.22} />
+            <HueSaturation hue={0} saturation={-0.15} />
             <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
-            <ChromaticAberration offset={new THREE.Vector2(0.0006, 0.0006)} radialModulation={false} modulationOffset={0} />
-            <Vignette offset={0.25} darkness={0.85} eskil={false} />
+            <ChromaticAberration offset={new THREE.Vector2(0.0004, 0.0004)} radialModulation={false} modulationOffset={0} />
+            <Vignette offset={0.2} darkness={0.9} eskil={false} />
           </EffectComposer>
         </Suspense>
       </Canvas>
