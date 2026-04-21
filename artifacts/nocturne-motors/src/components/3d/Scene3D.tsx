@@ -1,7 +1,7 @@
 import React, { useRef, useMemo, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import * as THREE from 'three';
-import { EffectComposer, Bloom, Vignette, ToneMapping } from '@react-three/postprocessing';
+import { EffectComposer, Bloom, Vignette, ToneMapping, ChromaticAberration, BrightnessContrast, HueSaturation } from '@react-three/postprocessing';
 import { ToneMappingMode } from 'postprocessing';
 import { OrbitControls, Html } from '@react-three/drei';
 import { Environment } from './Environment';
@@ -85,15 +85,20 @@ export function Scene3D() {
         camera={{ position: [2, 1.4, 12], fov: 40 }} // Cinematic low angle
       >
         <Suspense fallback={<Loader />}>
-          <OrbitControls 
+          <OrbitControls
             enableDamping
-            dampingFactor={0.05}
-            enablePan={false}
-            minDistance={4}
-            maxDistance={80}
-            minPolarAngle={Math.PI / 4} // Don't go too high
-            maxPolarAngle={Math.PI / 2 - 0.02} // Don't go below ground
-            target={[0, 0.8, 5]} // Focus on the hero car
+            dampingFactor={0.06}
+            enablePan
+            screenSpacePanning={false}
+            panSpeed={1.2}
+            zoomSpeed={1.1}
+            rotateSpeed={0.9}
+            minDistance={1.5}
+            maxDistance={200}
+            minPolarAngle={0.05}
+            maxPolarAngle={Math.PI / 2 - 0.02}
+            target={[0, 0.8, -25]}
+            makeDefault
           />
           <Environment />
           
@@ -109,10 +114,13 @@ export function Scene3D() {
           ))}
 
           <EffectComposer disableNormalPass multisampling={4}>
-            {/* Cinematic Post-Processing Stack — DOF dialed back so cars stay sharp */}
-            <Bloom intensity={0.45} luminanceThreshold={0.9} mipmapBlur={true} radius={0.6} />
+            {/* Cinematic Post-Processing Stack — sharp cars, moody grade */}
+            <Bloom intensity={0.6} luminanceThreshold={0.82} mipmapBlur={true} radius={0.75} />
+            <BrightnessContrast brightness={-0.02} contrast={0.18} />
+            <HueSaturation hue={0} saturation={-0.08} />
             <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
-            <Vignette offset={0.35} darkness={0.55} eskil={false} />
+            <ChromaticAberration offset={new THREE.Vector2(0.0006, 0.0006)} radialModulation={false} modulationOffset={0} />
+            <Vignette offset={0.25} darkness={0.85} eskil={false} />
           </EffectComposer>
         </Suspense>
       </Canvas>
@@ -129,7 +137,7 @@ export function Scene3D() {
       
       <div className="absolute bottom-10 left-0 w-full flex justify-center pointer-events-none z-20">
         <div className="bg-black/30 backdrop-blur-md border border-white/5 px-6 py-3 text-[10px] font-sans tracking-[0.2em] text-white/60 uppercase">
-          Drag to explore &bull; Scroll to dolly
+          Left-drag to orbit &bull; Right-drag to pan &bull; Scroll to zoom
         </div>
       </div>
     </div>
