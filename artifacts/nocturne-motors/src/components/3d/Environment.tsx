@@ -29,32 +29,16 @@ export function Environment() {
 
   return (
     <>
-      {/* Real moonless-night HDRI as the actual sky */}
+      {/* Driving School — outdoor asphalt circuit, clear sky, high-contrast sun */}
       <DreiEnvironment
-        files="https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/2k/moonless_golf_2k.hdr"
-        environmentIntensity={0.35}
+        files="https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/2k/driving_school_2k.hdr"
+        environmentIntensity={1.0}
         background
-        backgroundBlurriness={0.15}
-        backgroundIntensity={0.45}
+        backgroundBlurriness={0.8}
+        backgroundIntensity={1.0}
       />
 
-      {/* Key Light — warm, controlled, the only strong source */}
-      <directionalLight
-        position={[8, 12, 6]}
-        intensity={1.1}
-        color="#ffe2b8"
-        castShadow
-        shadow-mapSize={[1024, 1024]}
-        shadow-bias={-0.0001}
-      />
-
-      {/* Fill Light — cool, very subtle, just lifts the shadow side */}
-      <directionalLight position={[-8, 6, 4]} intensity={0.18} color="#9ab4ff" />
-
-      {/* Rim / Kicker — narrow back light for silhouette separation */}
-      <directionalLight position={[-2, 3, -15]} intensity={0.6} color="#cfd8ff" />
-
-      {/* Dark asphalt road — flat dark material, no reflection blow-out */}
+      {/* Dark asphalt road */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 10]} receiveShadow>
         <planeGeometry args={[400, 600]} />
         <meshStandardMaterial
@@ -63,7 +47,7 @@ export function Environment() {
           metalness={0.05}
           normalMap={asphaltNormal}
           normalScale={new THREE.Vector2(0.5, 0.5)}
-          envMapIntensity={0.15}
+          envMapIntensity={0.2}
         />
       </mesh>
     </>

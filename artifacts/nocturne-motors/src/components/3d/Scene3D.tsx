@@ -1,7 +1,7 @@
 import React, { useRef, useMemo, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import * as THREE from 'three';
-import { EffectComposer, Bloom, Vignette, ToneMapping, ChromaticAberration, BrightnessContrast, HueSaturation } from '@react-three/postprocessing';
+import { EffectComposer, Bloom, Vignette, ToneMapping, BrightnessContrast, HueSaturation } from '@react-three/postprocessing';
 import { ToneMappingMode } from 'postprocessing';
 import { OrbitControls, Html } from '@react-three/drei';
 import { Environment } from './Environment';
@@ -30,7 +30,7 @@ export function Scene3D() {
     },
     {
       id: 'c2',
-      color: '#ffffff', // Pearl White
+      color: '#c8c8c8', // Pearl White
       position: [2.5, 0, -10],
       rotation: [0, -0.3, 0],
       name: 'Bianco Fuji Coupe',
@@ -79,7 +79,7 @@ export function Scene3D() {
         gl={{
           antialias: true,
           toneMapping: THREE.ACESFilmicToneMapping,
-          toneMappingExposure: 0.65
+          toneMappingExposure: 0.55
         }}
         frameloop="always"
         camera={{ position: [2, 1.4, 12], fov: 40 }} // Cinematic low angle
@@ -114,13 +114,12 @@ export function Scene3D() {
           ))}
 
           <EffectComposer disableNormalPass multisampling={4}>
-            {/* Restrained cinematic grade — only true highlights bloom */}
-            <Bloom intensity={0.18} luminanceThreshold={1.0} luminanceSmoothing={0.2} mipmapBlur radius={0.55} />
-            <BrightnessContrast brightness={-0.06} contrast={0.22} />
-            <HueSaturation hue={0} saturation={-0.15} />
+            {/* Only true specular highlights bloom — threshold at 1.0 keeps car body clean */}
+            <Bloom intensity={0.10} luminanceThreshold={1.1} luminanceSmoothing={0.15} mipmapBlur radius={0.45} />
+            <BrightnessContrast brightness={-0.04} contrast={0.12} />
+            <HueSaturation hue={0} saturation={-0.10} />
             <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
-            <ChromaticAberration offset={new THREE.Vector2(0.0004, 0.0004)} radialModulation={false} modulationOffset={0} />
-            <Vignette offset={0.2} darkness={0.9} eskil={false} />
+            <Vignette offset={0.25} darkness={0.75} eskil={false} />
           </EffectComposer>
         </Suspense>
       </Canvas>

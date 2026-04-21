@@ -32,13 +32,14 @@ export function CarModel({
     const clone = scene.clone();
     
     // Premium Materials
+    // Real car paint: low metalness (diffuse base), shine comes from clearcoat layer only
     const bodyMaterial = new THREE.MeshPhysicalMaterial({
       color: new THREE.Color(color),
-      metalness: 0.85,
-      roughness: 0.32,
+      metalness: 0.10,
+      roughness: 0.38,
       clearcoat: 1.0,
-      clearcoatRoughness: 0.18,
-      envMapIntensity: 0.7,
+      clearcoatRoughness: 0.12,
+      envMapIntensity: 1.0,
     });
 
     const glassMaterial = new THREE.MeshPhysicalMaterial({
