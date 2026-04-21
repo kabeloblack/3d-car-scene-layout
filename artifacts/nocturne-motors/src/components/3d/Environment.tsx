@@ -1,33 +1,41 @@
-import React, { useRef, useMemo } from 'react';
-import { MeshReflectorMaterial, Environment as DreiEnvironment, AccumulativeShadows, RandomizedLight, useTexture } from '@react-three/drei';
+import React, { useMemo } from 'react';
+import { MeshReflectorMaterial, Environment as DreiEnvironment, AccumulativeShadows, RandomizedLight } from '@react-three/drei';
 import * as THREE from 'three';
 
-export function Environment() {
-  // Real asphalt PBR textures from Poly Haven (CC0)
-  const [asphaltDiff, asphaltNormal, asphaltRough] = useTexture([
-    'https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/aerial_asphalt_01/aerial_asphalt_01_diff_1k.jpg',
-    'https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/aerial_asphalt_01/aerial_asphalt_01_nor_gl_1k.jpg',
-    'https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/aerial_asphalt_01/aerial_asphalt_01_rough_1k.jpg',
-  ]);
+// Procedurally generated asphalt normal map — small grainy bumps, no external assets
+function makeAsphaltNormal(): THREE.DataTexture {
+  const size = 256;
+  const data = new Uint8Array(size * size * 4);
+  for (let i = 0; i < size * size; i++) {
+    const n = Math.random() * 0.4 - 0.2;
+    data[i * 4 + 0] = 128 + n * 80;
+    data[i * 4 + 1] = 128 + (Math.random() * 0.4 - 0.2) * 80;
+    data[i * 4 + 2] = 255;
+    data[i * 4 + 3] = 255;
+  }
+  const tex = new THREE.DataTexture(data, size, size, THREE.RGBAFormat);
+  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+  tex.needsUpdate = true;
+  return tex;
+}
 
-  useMemo(() => {
-    [asphaltDiff, asphaltNormal, asphaltRough].forEach((t) => {
-      t.wrapS = t.wrapT = THREE.RepeatWrapping;
-      t.repeat.set(20, 60);
-      t.anisotropy = 8;
-    });
-    asphaltDiff.colorSpace = THREE.SRGBColorSpace;
-  }, [asphaltDiff, asphaltNormal, asphaltRough]);
+export function Environment() {
+  const asphaltNormal = useMemo(() => {
+    const t = makeAsphaltNormal();
+    t.repeat.set(40, 120);
+    t.anisotropy = 8;
+    return t;
+  }, []);
 
   return (
     <>
-      {/* Big realistic night HDRI as the actual sky/skybox */}
+      {/* Real moonless-night HDRI as the actual sky */}
       <DreiEnvironment
-        files="https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/2k/dikhololo_night_2k.hdr"
-        environmentIntensity={0.8}
+        files="https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/2k/moonless_golf_2k.hdr"
+        environmentIntensity={0.6}
         background
-        backgroundBlurriness={0.0}
-        backgroundIntensity={1.0}
+        backgroundBlurriness={0.05}
+        backgroundIntensity={0.7}
       />
 
       {/* Soft atmospheric fog blending into the night */}
@@ -64,26 +72,24 @@ export function Environment() {
         <RandomizedLight amount={8} radius={4} ambient={0.5} intensity={1} position={[5, 5, -10]} bias={0.001} />
       </AccumulativeShadows>
 
-      {/* Real asphalt road floor — PBR textured, slightly damp for subtle reflection */}
+      {/* Dark asphalt road — procedural, no external texture deps */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 10]} receiveShadow>
         <planeGeometry args={[400, 600]} />
         <MeshReflectorMaterial
-          blur={[300, 100]}
+          blur={[300, 80]}
           resolution={512}
           mixBlur={1.0}
-          mixStrength={0.6}
+          mixStrength={0.5}
           mixContrast={1.0}
-          depthScale={0.8}
+          depthScale={0.6}
           minDepthThreshold={0.5}
           maxDepthThreshold={1.4}
-          color="#5a5a5a"
-          metalness={0.15}
-          roughness={0.85}
-          mirror={0.15}
-          map={asphaltDiff}
+          color="#0e0e10"
+          metalness={0.1}
+          roughness={0.92}
+          mirror={0.1}
           normalMap={asphaltNormal}
-          roughnessMap={asphaltRough}
-          normalScale={new THREE.Vector2(0.6, 0.6)}
+          normalScale={new THREE.Vector2(0.4, 0.4)}
         />
       </mesh>
     </>
