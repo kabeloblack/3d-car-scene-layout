@@ -51,17 +51,17 @@ export function Environment() {
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 50]} receiveShadow>
         <planeGeometry args={[40, 600]} />
         <MeshReflectorMaterial
-          blur={[400, 100]}
-          resolution={1024}
+          blur={[300, 80]}
+          resolution={512}
           mixBlur={1}
-          mixStrength={1.5}
-          roughness={0.2}
-          depthScale={1.2}
-          minDepthThreshold={0.4}
+          mixStrength={1.2}
+          roughness={0.3}
+          depthScale={1}
+          minDepthThreshold={0.5}
           maxDepthThreshold={1.4}
           color="#050505"
-          metalness={0.8}
-          mirror={0.5}
+          metalness={0.7}
+          mirror={0.4}
         />
       </mesh>
 
@@ -106,14 +106,15 @@ export function Environment() {
             <planeGeometry args={[0.5, 0.3]} />
             <meshBasicMaterial color="#ffa500" />
           </mesh>
-          <pointLight 
-            position={[pos.x < 0 ? 2 : -2, 7.5, 0]} 
-            color="#ffaa00" 
-            intensity={pos.z > -200 ? 5 : 2} 
-            distance={40} 
-            decay={2}
-            castShadow={pos.z > -50 && pos.z < 50} 
-          />
+          {pos.z > -90 && i < 12 ? (
+            <pointLight
+              position={[pos.x < 0 ? 2 : -2, 7.5, 0]}
+              color="#ffaa00"
+              intensity={6}
+              distance={45}
+              decay={2}
+            />
+          ) : null}
         </group>
       ))}
 
