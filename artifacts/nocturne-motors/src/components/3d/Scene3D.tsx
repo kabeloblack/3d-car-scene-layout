@@ -1,7 +1,7 @@
 import React, { useRef, useMemo, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import * as THREE from 'three';
-import { EffectComposer, Bloom, DepthOfField, Vignette, ToneMapping, ChromaticAberration } from '@react-three/postprocessing';
+import { EffectComposer, Bloom, Vignette, ToneMapping } from '@react-three/postprocessing';
 import { ToneMappingMode } from 'postprocessing';
 import { OrbitControls, Html } from '@react-three/drei';
 import { Environment } from './Environment';
@@ -109,12 +109,10 @@ export function Scene3D() {
           ))}
 
           <EffectComposer disableNormalPass multisampling={4}>
-            {/* Cinematic Post-Processing Stack */}
-            <Bloom intensity={0.6} luminanceThreshold={0.85} mipmapBlur={true} radius={0.7} />
-            <DepthOfField focusDistance={0.015} focalLength={0.05} bokehScale={3} />
+            {/* Cinematic Post-Processing Stack — DOF dialed back so cars stay sharp */}
+            <Bloom intensity={0.45} luminanceThreshold={0.9} mipmapBlur={true} radius={0.6} />
             <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
-            <Vignette offset={0.3} darkness={0.7} eskil={false} />
-            <ChromaticAberration offset={new THREE.Vector2(0.0005, 0.0005)} />
+            <Vignette offset={0.35} darkness={0.55} eskil={false} />
           </EffectComposer>
         </Suspense>
       </Canvas>

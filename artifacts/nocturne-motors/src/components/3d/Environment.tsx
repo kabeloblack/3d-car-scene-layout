@@ -16,8 +16,13 @@ export function Environment() {
       <color attach="background" args={['#050404']} />
       <fog attach="fog" args={['#050404', 15, 120]} />
 
-      {/* HDRI Environment for realistic lighting and reflections */}
-      <DreiEnvironment preset="warehouse" environmentIntensity={1.2} background={false} />
+      {/* HDRI Environment for realistic lighting and reflections.
+          Loaded from Poly Haven (free CC0 HDRI CDN). */}
+      <DreiEnvironment
+        files="https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/studio_small_03_1k.hdr"
+        environmentIntensity={1.4}
+        background={false}
+      />
 
       {/* Key Light: Warm, strong, casting soft shadows */}
       <directionalLight 
