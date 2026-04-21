@@ -1,0 +1,29 @@
+Create a high-end cinematic 3D scene featuring multiple realistic cars placed along a continuous environment designed for scroll-based camera movement.
+
+Lighting:
+Use a dramatic cinematic lighting setup with a strong key light (soft but directional, like golden hour sunlight or a controlled studio spotlight), subtle fill light to preserve detail, and a rim light to highlight the silhouette and contours of each car. Include realistic reflections using HDRI environment lighting. Add soft global illumination and physically accurate light bounce for realism.
+
+Mood & Atmosphere:
+Aim for a premium automotive commercial look — slightly moody, high contrast, with controlled highlights and deep shadows. Include light atmospheric haze or volumetric fog to create depth and separation between cars.
+
+Materials & Surfaces:
+Cars must have ultra-realistic materials:
+- glossy automotive paint with clearcoat reflections
+- accurate metallic flake response
+- realistic glass with reflections and slight tint
+- detailed tires with roughness and subtle imperfections
+
+Environment:
+Create a minimal but cinematic environment (dark studio, tunnel, or open road at sunset). The ground should have subtle reflectivity to catch light and reflections of the cars. Background elements should be soft and not distracting.
+
+Camera:
+Use a cinematic camera setup with a slightly low angle for power and presence. Apply realistic depth of field — keep the focused car sharp while others fall slightly out of focus. Use smooth forward camera movement designed to be controlled by scroll.
+
+Composition:
+Place multiple cars along the depth (Z-axis), spaced naturally so that as the camera moves forward, each car enters focus sequentially. Ensure clean framing and strong composition for each car reveal.
+
+Post-processing:
+Apply subtle bloom on highlights, light motion blur for realism, filmic tone mapping, and balanced color grading (slightly warm highlights, cooler shadows).
+
+Performance:
+Optimize geometry and textures for real-time rendering while maintaining high visual fidelity.

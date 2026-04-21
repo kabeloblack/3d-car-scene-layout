@@ -6,12 +6,9 @@ import { Html, useGLTF } from '@react-three/drei';
 
 interface CarModelProps {
   color: string;
-  accentColor?: string;
-  headlightColor?: string;
   scale?: number;
   position?: [number, number, number];
   rotation?: [number, number, number];
-  type?: 'hypercar' | 'sedan' | 'coupe';
   name?: string;
   specs?: { hp: number; speed: number; engine: string };
 }
@@ -20,12 +17,9 @@ useGLTF.preload('https://threejs.org/examples/models/gltf/ferrari.glb');
 
 export function CarModel({
   color,
-  accentColor = '#111',
-  headlightColor = '#ffffff',
   scale = 1.5,
   position = [0, 0, 0],
   rotation = [0, 0, 0],
-  type = 'hypercar',
   name = 'Concept X',
   specs = { hp: 800, speed: 220, engine: 'V8' },
 }: CarModelProps) {
@@ -36,15 +30,58 @@ export function CarModel({
 
   const clonedScene = useMemo(() => {
     const clone = scene.clone();
+    
+    // Premium Materials
+    const bodyMaterial = new THREE.MeshPhysicalMaterial({
+      color: new THREE.Color(color),
+      metalness: 0.9,
+      roughness: 0.25,
+      clearcoat: 1.0,
+      clearcoatRoughness: 0.1,
+      envMapIntensity: 1.5,
+    });
+
+    const glassMaterial = new THREE.MeshPhysicalMaterial({
+      color: new THREE.Color('#0a0a14'),
+      metalness: 0.0,
+      roughness: 0.05,
+      transmission: 0.9,
+      ior: 1.5,
+      thickness: 0.5,
+      envMapIntensity: 1.0,
+      transparent: true,
+    });
+
+    const tireMaterial = new THREE.MeshStandardMaterial({
+      color: '#111',
+      roughness: 0.95,
+      metalness: 0.1,
+    });
+
+    const rimMaterial = new THREE.MeshStandardMaterial({
+      color: '#aaaaaa',
+      roughness: 0.1,
+      metalness: 0.9,
+    });
+
     clone.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
         const mesh = child as THREE.Mesh;
-        // The ferrari model usually has materials that can be tinted
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        
         if (mesh.material) {
-          const mat = mesh.material as THREE.Material;
-          if (mat.name.toLowerCase().includes('body') || mat.name.toLowerCase().includes('paint')) {
-            mesh.material = mat.clone();
-            (mesh.material as THREE.MeshStandardMaterial).color = new THREE.Color(color);
+          const matName = (mesh.material as THREE.Material).name.toLowerCase();
+          
+          if (matName.includes('body') || matName.includes('paint') || matName.includes('yellow')) {
+            mesh.material = bodyMaterial;
+          } else if (matName.includes('glass') || matName.includes('window') || matName.includes('windshield')) {
+            mesh.material = glassMaterial;
+            mesh.castShadow = false; // Glass shadows can look weird
+          } else if (matName.includes('tire') || matName.includes('rubber')) {
+            mesh.material = tireMaterial;
+          } else if (matName.includes('rim') || matName.includes('alloy') || matName.includes('metal')) {
+            mesh.material = rimMaterial;
           }
         }
       }
@@ -52,11 +89,11 @@ export function CarModel({
     return clone;
   }, [scene, color]);
 
-  // Animate hover effect
+  // Animate hover effect gently
   useFrame((state, delta) => {
     if (groupRef.current) {
-      const targetScale = hovered ? scale * 1.05 : scale;
-      groupRef.current.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), delta * 5);
+      const targetScale = hovered ? scale * 1.02 : scale;
+      groupRef.current.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), delta * 4);
     }
   });
   
@@ -69,42 +106,44 @@ export function CarModel({
       onPointerOver={(e) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer'; }}
       onPointerOut={() => { setHovered(false); document.body.style.cursor = 'auto'; }}
     >
+      {/* Note: Ferrari GLTF is usually facing backwards or needs Pi rotation depending on source.
+          Adjusting rotation to face forward (along Z). */}
       <primitive object={clonedScene} rotation={[0, Math.PI, 0]} />
 
-      {/* Headlight pool — single spotlight per car, no shadows for perf */}
+      {/* Headlight pool — subtle emissive glow when hovered */}
       {hovered && (
         <spotLight
-          color={headlightColor}
-          intensity={25}
-          angle={0.6}
-          penumbra={0.6}
-          distance={30}
+          color="#ffffff"
+          intensity={15}
+          angle={0.4}
+          penumbra={0.8}
+          distance={20}
           decay={2}
-          position={[0, 0.55, 2.1]}
-          target-position={[0, -0.5, 8]}
+          position={[0, 0.6, 2.1]}
+          target-position={[0, 0, 8]}
         />
       )}
 
       {hovered && (
-        <Html position={[0, 1.5, 0]} center zIndexRange={[100, 0]}>
-          <div className="bg-black/80 backdrop-blur-md border border-white/10 p-4 rounded-none text-white w-64 transform -translate-x-1/2 transition-opacity duration-300 opacity-100">
-            <h3 className="text-xl font-serif font-semibold tracking-wider text-primary mb-1 uppercase">{name}</h3>
-            <div className="space-y-1 mb-4 text-xs font-mono text-white/70">
+        <Html position={[0, 1.2, 0]} center zIndexRange={[100, 0]}>
+          <div className="bg-black/60 backdrop-blur-xl border border-white/10 p-5 rounded-none text-white w-64 transform -translate-x-1/2 transition-opacity duration-500 opacity-100 shadow-2xl">
+            <h3 className="text-lg font-serif font-light tracking-widest text-white mb-2 uppercase">{name}</h3>
+            <div className="space-y-2 mb-5 text-[10px] font-sans tracking-widest text-white/50 uppercase">
               <div className="flex justify-between border-b border-white/10 pb-1">
                 <span>Power</span>
-                <span className="text-white">{specs.hp} HP</span>
+                <span className="text-white/90">{specs.hp} HP</span>
               </div>
               <div className="flex justify-between border-b border-white/10 pb-1">
-                <span>Top Speed</span>
-                <span className="text-white">{specs.speed} MPH</span>
+                <span>Speed</span>
+                <span className="text-white/90">{specs.speed} MPH</span>
               </div>
               <div className="flex justify-between border-b border-white/10 pb-1">
-                <span>Engine</span>
-                <span className="text-white">{specs.engine}</span>
+                <span>Motor</span>
+                <span className="text-white/90">{specs.engine}</span>
               </div>
             </div>
-            <button className="w-full bg-primary/20 hover:bg-primary text-primary hover:text-black transition-colors py-2 text-xs font-mono tracking-widest uppercase border border-primary/50 pointer-events-auto cursor-pointer">
-              Inquire
+            <button className="w-full bg-white/5 hover:bg-white/10 text-white/90 transition-colors py-3 text-[10px] font-sans tracking-[0.2em] uppercase border border-white/10 pointer-events-auto cursor-pointer">
+              View Details
             </button>
           </div>
         </Html>
