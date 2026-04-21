@@ -38,9 +38,6 @@ export function Environment() {
         backgroundIntensity={0.45}
       />
 
-      {/* Soft atmospheric fog blending into the night */}
-      <fog attach="fog" args={['#06070d', 12, 90]} />
-
       {/* Key Light — warm, controlled, the only strong source */}
       <directionalLight
         position={[8, 12, 6]}
